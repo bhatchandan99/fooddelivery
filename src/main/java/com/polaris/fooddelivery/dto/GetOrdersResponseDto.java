@@ -1,0 +1,18 @@
+package com.polaris.fooddelivery.dto;
+
+import com.polaris.fooddelivery.models.Order;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class GetOrdersResponseDto {
+    private List<Order> orders;
+    private long totalRecords;
+}
