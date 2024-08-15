@@ -1,7 +1,9 @@
 package com.polaris.fooddelivery.service;
 
+import com.polaris.fooddelivery.dto.CreateEntityResponseDto;
 import com.polaris.fooddelivery.dto.RiderResponseDto;
 import com.polaris.fooddelivery.dto.UpdateDriverLocationDto;
+import com.polaris.fooddelivery.dto.VerifyOtpEntityResponseDto;
 import com.polaris.fooddelivery.enums.Role;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.models.Location;
@@ -33,7 +35,7 @@ public class RiderService {
     @Autowired
     private CredentialRepository credentialRepository;
 
-    public Rider createRider(Rider rider) throws IOException {
+    public CreateEntityResponseDto createRider(Rider rider) throws IOException {
 
         String email = rider.getEmail();
         String phone = rider.getPhone();
@@ -63,10 +65,14 @@ public class RiderService {
         Rider riderData = riderRepository.save(rider);
         credential.setUserId(riderData.getId());
         credentialRepository.save(credential);
-        return riderData;
+
+        return CreateEntityResponseDto.builder()
+                .message("Please verify the OTP ")
+                .id(riderData.getId())
+                .build();
     }
 
-    public Credential verifyRiderOtp(String email, String phone, Integer otp) {
+    public VerifyOtpEntityResponseDto verifyRiderOtp(String email, String phone, Integer otp) {
         if (!phone.isEmpty() && phone.length() != 10) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number");
         }
@@ -85,7 +91,10 @@ public class RiderService {
         }
         rider.setVerified(true);
         riderRepository.save(rider);
-        return credential;
+
+        return VerifyOtpEntityResponseDto.builder()
+                .message("OTP Verified")
+                .build();
     }
 
 

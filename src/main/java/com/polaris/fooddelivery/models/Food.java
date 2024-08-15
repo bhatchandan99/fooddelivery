@@ -42,7 +42,6 @@ public class Food {
 
     }
 
-
     public enum FoodGenre {
         VEG, NONVEG, VEGAN
     }

@@ -1,18 +1,17 @@
 package com.polaris.fooddelivery.controllers;
 
+import com.polaris.fooddelivery.dto.*;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.models.Rider;
 import com.polaris.fooddelivery.models.User;
 import com.polaris.fooddelivery.service.RiderService;
 import com.polaris.fooddelivery.service.UserService;
-import com.polaris.fooddelivery.dto.RiderResponseDto;
 import com.polaris.fooddelivery.enums.Role;
-import com.polaris.fooddelivery.dto.UpdateDriverLocationDto;
-import com.polaris.fooddelivery.dto.VerifyOtpDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -61,18 +60,19 @@ public class RiderController {
 //    }
 
     // create rider details
-    @PostMapping("/createRider")
-    Rider createRider(@RequestBody Rider rider) throws IOException {
-        if (rider.getEmail().isEmpty() || rider.getPhone().isEmpty()) {
+    @PostMapping("/rider")
+    CreateEntityResponseDto createRider(@RequestBody Rider rider) throws IOException {
+        if (!StringUtils.hasLength(rider.getEmail()) || !StringUtils.hasLength(rider.getPhone())) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE
+                    HttpStatus.NOT_ACCEPTABLE,
+                    "Provide phone and email"
             );
         }
         return riderService.createRider(rider);
     }
 
-    @PostMapping("/verifysignUpOtp")
-    Credential verifySignUpOtp(@RequestBody VerifyOtpDto verifyOtpDto) throws IOException {
+    @PostMapping("/verify/rider")
+    VerifyOtpEntityResponseDto verifySignUpOtp(@RequestBody VerifyOtpDto verifyOtpDto) throws IOException {
         String email = verifyOtpDto.getEmail();
         String phone = verifyOtpDto.getPhone();
         Integer otp = verifyOtpDto.getOtp();
@@ -95,8 +95,6 @@ public class RiderController {
 
         return riderService.updateRiderLocation(riderId, updateDriverLocationDt);
     }
-
-
 
 
 }

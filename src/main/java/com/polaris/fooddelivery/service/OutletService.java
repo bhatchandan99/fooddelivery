@@ -143,7 +143,7 @@ public class OutletService {
     }
 
 
-    public Outlet createOutlet(Outlet outlet) throws IOException {
+    public CreateEntityResponseDto createOutlet(Outlet outlet) throws IOException {
 
         String email = outlet.getEmail();
         String phone = outlet.getPhone();
@@ -175,10 +175,14 @@ public class OutletService {
         Outlet outletData = outletRepository.save(outlet);
         credential.setUserId(outletData.getId());
         credentialRepository.save(credential);
-        return outlet;
+        return CreateEntityResponseDto.builder()
+                .message("Please verify the OTP ")
+                .id(outletData.getId())
+                .build();
     }
 
-    public Credential verifyOutletOtp(String email, String phone, Integer otp) {
+    public VerifyOtpEntityResponseDto verifyOutletOtp(String email, String phone, Integer otp) {
+
         if (!phone.isEmpty() && phone.length() != 10) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number");
         }
@@ -198,6 +202,8 @@ public class OutletService {
         outletDetails.setIsAvailable(true);
         outletDetails.setIsEnabled(true);
         outletRepository.save(outletDetails);
-        return credential;
+        return VerifyOtpEntityResponseDto.builder()
+                .message("OTP Verified")
+                .build();
     }
 }

@@ -20,9 +20,6 @@ public class OrderController {
     }
 
 
-
-
-
     @GetMapping("/customer/{userId}/orders")
     GetOrdersResponseDto getOrders(@PathVariable String userId,
                                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int size,

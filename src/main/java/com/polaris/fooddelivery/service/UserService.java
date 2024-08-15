@@ -2,6 +2,8 @@ package com.polaris.fooddelivery.service;
 
 import com.mongodb.lang.Nullable;
 import com.polaris.fooddelivery.constants.GenericConstants;
+import com.polaris.fooddelivery.dto.CreateEntityResponseDto;
+import com.polaris.fooddelivery.dto.VerifyOtpEntityResponseDto;
 import com.polaris.fooddelivery.enums.Role;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.models.Outlet;
@@ -158,7 +160,7 @@ public class UserService {
         return credential;
     }
 
-    public User createUser(User user) throws IOException {
+    public CreateEntityResponseDto createUser(User user) throws IOException {
 
         String email = user.getEmail();
         String phone = user.getPhone();
@@ -191,10 +193,14 @@ public class UserService {
         User userData = userRepository.save(user);
         credential.setUserId(userData.getId());
         credentialRepository.save(credential);
-        return userData;
+        return CreateEntityResponseDto
+                .builder()
+                .message("Please Verify OTP")
+                .id(userData.getId())
+                .build();
     }
 
-    public Credential verifyOtp(String email, String phone, Integer otp) {
+    public VerifyOtpEntityResponseDto verifyOtp(String email, String phone, Integer otp) {
         if (!phone.isEmpty() && phone.length() != 10) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number");
         }
@@ -215,6 +221,6 @@ public class UserService {
         }
         user.setVerified(true);
         userRepository.save(user);
-        return credential;
+        return VerifyOtpEntityResponseDto.builder().message("Success").build();
     }
 }

@@ -1,9 +1,6 @@
 package com.polaris.fooddelivery.controllers;
 
-import com.polaris.fooddelivery.dto.GetOutletMenuResponseDto;
-import com.polaris.fooddelivery.dto.GetOutletsResponseDto;
-import com.polaris.fooddelivery.dto.GetRidersForOutletDto;
-import com.polaris.fooddelivery.dto.VerifyOtpDto;
+import com.polaris.fooddelivery.dto.*;
 import com.polaris.fooddelivery.enums.Role;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.service.OrderService;
@@ -14,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -78,18 +76,19 @@ public class OutletController {
         return userService.checkValidUser(emailId, phone, Role.RESTURANT);
     }
 
-    @PostMapping("/createOutlet")
-    Outlet createOutlet(@RequestBody Outlet outlet) throws IOException {
-        if (outlet.getEmail().isEmpty() || outlet.getPhone().isEmpty()) {
+    @PostMapping("/outlet")
+    CreateEntityResponseDto createOutlet(@RequestBody Outlet outlet) throws IOException {
+        if (!StringUtils.hasLength(outlet.getEmail()) || !StringUtils.hasLength(outlet.getPhone())) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE
+                    HttpStatus.NOT_ACCEPTABLE,
+                    "Provide phone and email"
             );
         }
         return outletService.createOutlet(outlet);
     }
 
-    @PostMapping("/verifyOuletsignUpOtp")
-    Credential verifySignUpOtp(@RequestBody VerifyOtpDto verifyOtpDto) throws IOException {
+    @PostMapping("/verify/outlet")
+    VerifyOtpEntityResponseDto verifySignUpOtp(@RequestBody VerifyOtpDto verifyOtpDto) throws IOException {
         String email = verifyOtpDto.getEmail();
         String phone = verifyOtpDto.getPhone();
         Integer otp = verifyOtpDto.getOtp();
@@ -100,7 +99,8 @@ public class OutletController {
         }
         if (otp == null) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_ACCEPTABLE
+                    HttpStatus.NOT_ACCEPTABLE,
+                    "No otp found"
             );
         }
         return outletService.verifyOutletOtp(email, phone, otp);
