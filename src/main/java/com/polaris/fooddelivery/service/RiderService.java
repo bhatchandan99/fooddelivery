@@ -5,6 +5,7 @@ import com.polaris.fooddelivery.dto.RiderResponseDto;
 import com.polaris.fooddelivery.dto.UpdateDriverLocationDto;
 import com.polaris.fooddelivery.dto.VerifyOtpEntityResponseDto;
 import com.polaris.fooddelivery.enums.Role;
+import com.polaris.fooddelivery.helpers.GenericHelper;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.models.Location;
 import com.polaris.fooddelivery.models.Rider;
@@ -60,8 +61,6 @@ public class RiderService {
         credential.setPhone(phone);
         credential.setOtp(otp);
         credential.setRole(Role.RIDER);
-        credential.setCreatedAt(rider.getCreatedAt());
-        credential.setUpdatedAt(rider.getUpdatedAt());
         Rider riderData = riderRepository.save(rider);
         credential.setUserId(riderData.getId());
         credentialRepository.save(credential);
@@ -73,6 +72,7 @@ public class RiderService {
     }
 
     public VerifyOtpEntityResponseDto verifyRiderOtp(String email, String phone, Integer otp) {
+
         if (!phone.isEmpty() && phone.length() != 10) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number");
         }
@@ -82,6 +82,8 @@ public class RiderService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Credential not found");
         }
         Credential credential = credentialDetails.get();
+        GenericHelper.validateOtpExpiry(otp, credential);
+
         if (!credential.getOtp().equals(otp)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP");
         }

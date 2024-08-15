@@ -3,9 +3,9 @@ package com.polaris.fooddelivery.controllers;
 import com.polaris.fooddelivery.dto.*;
 import com.polaris.fooddelivery.enums.Role;
 import com.polaris.fooddelivery.models.Credential;
+import com.polaris.fooddelivery.models.Outlet;
 import com.polaris.fooddelivery.service.OrderService;
 import com.polaris.fooddelivery.service.OutletService;
-import com.polaris.fooddelivery.models.Outlet;
 import com.polaris.fooddelivery.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ import java.util.Objects;
 public class OutletController {
     private static final Logger log = LoggerFactory.getLogger(OutletController.class);
 
-   @Autowired
-   OutletService outletService;
+    @Autowired
+    OutletService outletService;
 
     @Autowired
     UserService userService;
@@ -39,19 +39,19 @@ public class OutletController {
 
         log.info(String.format("getRidersForOutlet : get order  menu for outletId %s ", outletId));
 
-        return outletService.getRidersForOutlet(outletId,count);
+        return outletService.getRidersForOutlet(outletId, count);
     }
 
     @GetMapping("/outlet/{outletId}/menu")
     GetOutletMenuResponseDto getOutletMenu(@PathVariable String outletId,
                                            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int size,
                                            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int page,
-                                           @RequestParam(value = "sortKey", defaultValue = "price", required = false)  String sortKey
+                                           @RequestParam(value = "sortKey", defaultValue = "price", required = false) String sortKey
     ) throws Exception {
 
         log.info(String.format("getOutletMenu : get order  menu for outletId %s ", outletId));
 
-        return outletService.getOutletMenu(outletId,sortKey,page,size);
+        return outletService.getOutletMenu(outletId, sortKey, page, size);
     }
 
     @GetMapping("/customer/{userId}/outlets")

@@ -5,6 +5,7 @@ import com.polaris.fooddelivery.constants.GenericConstants;
 import com.polaris.fooddelivery.dto.CreateEntityResponseDto;
 import com.polaris.fooddelivery.dto.VerifyOtpEntityResponseDto;
 import com.polaris.fooddelivery.enums.Role;
+import com.polaris.fooddelivery.helpers.GenericHelper;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.models.Outlet;
 import com.polaris.fooddelivery.models.Rider;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
 
@@ -186,8 +186,6 @@ public class UserService {
         credential.setPhone(phone);
         credential.setOtp(otp);
         credential.setRole(Role.CUSTOMER);
-        credential.setCreatedAt(new Date().toString());
-        credential.setUpdatedAt(new Date().toString());
 
         log.info("credentials saved");
         User userData = userRepository.save(user);
@@ -201,6 +199,7 @@ public class UserService {
     }
 
     public VerifyOtpEntityResponseDto verifyOtp(String email, String phone, Integer otp) {
+
         if (!phone.isEmpty() && phone.length() != 10) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number");
         }
@@ -210,17 +209,16 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Credential not found");
         }
         Credential credential = credentialDetails.get();
-        if (!credential.getOtp().equals(otp)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP");
-        }
-
+        GenericHelper.validateOtpExpiry(otp, credential);
         User user = userRepository.findByEmailOrPhone(email, phone).orElse(null);
 
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
+
         user.setVerified(true);
         userRepository.save(user);
         return VerifyOtpEntityResponseDto.builder().message("Success").build();
     }
+
 }

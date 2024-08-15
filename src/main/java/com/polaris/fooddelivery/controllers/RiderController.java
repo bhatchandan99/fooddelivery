@@ -1,12 +1,12 @@
 package com.polaris.fooddelivery.controllers;
 
 import com.polaris.fooddelivery.dto.*;
+import com.polaris.fooddelivery.enums.Role;
 import com.polaris.fooddelivery.models.Credential;
 import com.polaris.fooddelivery.models.Rider;
 import com.polaris.fooddelivery.models.User;
 import com.polaris.fooddelivery.service.RiderService;
 import com.polaris.fooddelivery.service.UserService;
-import com.polaris.fooddelivery.enums.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,11 @@ import java.util.Objects;
 @RequestMapping("/api/v1")
 public class RiderController {
 
+    private static final Logger log = LoggerFactory.getLogger(RiderController.class);
     @Autowired
     UserService userService;
     @Autowired
     private RiderService riderService;
-
-    private static final Logger log = LoggerFactory.getLogger(RiderController.class);
 
     @PostMapping("/loginRider")
     Credential loginUser(@RequestBody User user) throws IOException {

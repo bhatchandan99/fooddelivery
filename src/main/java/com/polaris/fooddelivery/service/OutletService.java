@@ -169,8 +169,6 @@ public class OutletService {
         credential.setPhone(phone);
         credential.setOtp(otp);
         credential.setRole(Role.RESTURANT);
-        credential.setCreatedAt(outlet.getCreatedAt());
-        credential.setUpdatedAt(outlet.getUpdatedAt());
 
         Outlet outletData = outletRepository.save(outlet);
         credential.setUserId(outletData.getId());
@@ -192,6 +190,7 @@ public class OutletService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Credential not found");
         }
         Credential credential = credentialDetails.get();
+        GenericHelper.validateOtpExpiry(otp, credential);
         if (!credential.getOtp().equals(otp)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP");
         }

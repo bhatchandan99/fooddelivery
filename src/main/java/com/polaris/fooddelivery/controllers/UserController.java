@@ -2,27 +2,25 @@ package com.polaris.fooddelivery.controllers;
 
 import com.polaris.fooddelivery.dto.CreateEntityResponseDto;
 import com.polaris.fooddelivery.dto.LoginRequestDto;
+import com.polaris.fooddelivery.dto.VerifyOtpDto;
 import com.polaris.fooddelivery.dto.VerifyOtpEntityResponseDto;
+import com.polaris.fooddelivery.enums.Role;
 import com.polaris.fooddelivery.models.Credential;
-import com.polaris.fooddelivery.models.GroceryItem;
 import com.polaris.fooddelivery.models.User;
 import com.polaris.fooddelivery.repository.ItemRepository;
 import com.polaris.fooddelivery.repository.UserRepository;
 import com.polaris.fooddelivery.service.UserService;
-import com.polaris.fooddelivery.enums.Role;
-import com.polaris.fooddelivery.dto.VerifyOtpDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -68,7 +66,7 @@ public class UserController {
                     HttpStatus.NOT_ACCEPTABLE
             );
         }
-        return userService.verifyCredential(email,phone,otp);
+        return userService.verifyCredential(email, phone, otp);
     }
 
     // register user
@@ -99,7 +97,7 @@ public class UserController {
                     HttpStatus.NOT_ACCEPTABLE
             );
         }
-        return userService.verifyOtp(email,phone,otp);
+        return userService.verifyOtp(email, phone, otp);
     }
 
 }

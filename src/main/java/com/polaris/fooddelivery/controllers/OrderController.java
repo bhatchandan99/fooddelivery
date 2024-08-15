@@ -1,6 +1,9 @@
 package com.polaris.fooddelivery.controllers;
 
-import com.polaris.fooddelivery.dto.*;
+import com.polaris.fooddelivery.dto.AcceptOrderRequestDto;
+import com.polaris.fooddelivery.dto.AcceptOrderResponseDto;
+import com.polaris.fooddelivery.dto.GetOrdersResponseDto;
+import com.polaris.fooddelivery.dto.GetRiderOrdersResponseDto;
 import com.polaris.fooddelivery.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +27,11 @@ public class OrderController {
     GetOrdersResponseDto getOrders(@PathVariable String userId,
                                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int size,
                                    @RequestParam(value = "pageNo", defaultValue = "0", required = false) int page
-                                   ) throws Exception {
+    ) throws Exception {
 
         log.info(String.format("getOrders : get order  for userId %s ", userId));
 
-        return orderService.getOrders(userId,size,page);
+        return orderService.getOrders(userId, size, page);
     }
 
     @GetMapping("/rider/{userId}/orders")
@@ -39,12 +42,8 @@ public class OrderController {
 
         log.info(String.format("getRiderOrders : get order  for userId %s ", userId));
 
-        return orderService.getRiderOrders(userId,page,size);
+        return orderService.getRiderOrders(userId, page, size);
     }
-
-
-
-
 
 
     @PutMapping("/orders/{orderId}/accept")

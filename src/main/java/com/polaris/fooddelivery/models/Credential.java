@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,6 +27,6 @@ public class Credential {
     private String phone;
     private Integer otp;
     private String token;
-    private String createdAt;
-    private String updatedAt;
+    private Date createdAt = new Date();
+    private Date updatedAt = new Date();
 }

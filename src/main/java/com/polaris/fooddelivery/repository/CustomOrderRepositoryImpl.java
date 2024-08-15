@@ -36,7 +36,7 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository {
         Criteria
                 .where("riderId").is(riderId);
         Criteria criteria = Criteria
-        .where("isCompleted").is(isComp);
+                .where("isCompleted").is(isComp);
         Query query = new Query(criteria);
         long totalRecords = mongoTemplate.count(query, Order.class);
         query.with(pageRequest).with(Sort.by(Sort.Direction.DESC, "createdAt"));
